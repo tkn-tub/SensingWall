@@ -20,6 +20,20 @@ The following sequence diagram demonstrates the interaction between those three 
 
 The installation process contains the following steps:
 * building and flashing the ESP32 nodes (AP and N stations) - see Makefile
+```
+make ap_flash PORT=/dev/ttyACM0
+make sta_flash PORT=/dev/ttyACM2
+```
+* start docker (InfluxDB, Grafana, Prometheus) on the server node:
+```
+docker compose run
+```
+* connect server node via WiFi to AP node:
+```
+cd server
+server_wifi_reconnect.sh &
+```
+
 * installation of server components (InfluxDB, Grafana, Prometheus) - see server/docker-compose.yaml
 
 ## Acknowledgement

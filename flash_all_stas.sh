@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Flash the following STAs connected via USB
+# Flash all STAs connected via USB
 
 echo "start flashing all STA nodes ..."
 
