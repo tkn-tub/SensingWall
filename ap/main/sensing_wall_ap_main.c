@@ -300,7 +300,7 @@ void socket_transmitter_sta_loop(int (*connected_stations)()) {
                 }
                 ESP_LOGD(TAG, "%s", buff_json);
             }
-            vTaskDelay(SENSING_WALL_MAX_STA_CONN / portTICK_PERIOD_MS); // in 2ms
+            vTaskDelay(SENSING_WALL_IP_MCAST_INTERVAL / portTICK_PERIOD_MS); // in 2ms
         }
     }
 }
