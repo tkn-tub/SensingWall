@@ -4,10 +4,15 @@
 
 echo "start flashing all STA nodes ..."
 
-devs='0 2 4 6 8 10 12 14'
-for dev in $devs
+# fetch all stas
+./search_stas.sh
+
+while read dev;
 do
-	make sta_flash PORT=/dev/ttyACM$dev
-done
+	if [[ $dev ]]
+	then
+		make sta_flash PORT=/dev/ttyACM$dev
+	fi
+done <stas_tty.dat
 
 echo "... done"
