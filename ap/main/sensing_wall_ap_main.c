@@ -100,8 +100,7 @@ static void wifi_csi_rx_cb(void *ctx, wifi_csi_info_t *info)
         return; // in case the source was neither an associated station nor the server node
     }
 
-    static uint32_t s_count = 0;
-    const wifi_pkt_rx_ctrl_t *rx_ctrl = &info->rx_ctrl;
+    //const wifi_pkt_rx_ctrl_t *rx_ctrl = &info->rx_ctrl;
 
     /** Only LLTF sub-carriers are selected. */
     info->len = 128;

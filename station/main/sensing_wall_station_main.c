@@ -62,8 +62,8 @@ static void wifi_csi_rx_cb(void *ctx, wifi_csi_info_t *info)
     uint8_t dmac[6];
     ESP_ERROR_CHECK(esp_read_mac(dmac, ESP_MAC_WIFI_STA));
 
-    static uint32_t s_count = 0;
-    const wifi_pkt_rx_ctrl_t *rx_ctrl = &info->rx_ctrl;
+    //static uint32_t s_count = 0;
+    //const wifi_pkt_rx_ctrl_t *rx_ctrl = &info->rx_ctrl;
 
     //if (!s_count) {
     //    ESP_LOGI(TAG, "================ CSI RECV ================");
