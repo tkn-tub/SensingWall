@@ -1,0 +1,99 @@
+import influxdb_client
+from influxdb_client.client.write_api import SYNCHRONOUS
+
+bucket = "csi"
+org = "my-init-org"
+token = "_P6D_Lv6Ezk4Cx1B_oCmFTYx7rwmql-_VoQ1qPG99bRgZWx8FaVsuaZVRv-l1NB-032_0dTVVIIa6aIABQQJVg=="
+# Store the URL of your InfluxDB instance
+url = "http://localhost:8086"
+
+
+client = influxdb_client.InfluxDBClient(
+    url=url,
+    token=token,
+    org=org
+)
+
+# Query script
+query_api = client.query_api()
+query = 'from(bucket: "csi")\
+  |> range(start: -5m)\
+  |> filter(fn: (r) => r["_measurement"] == "csi" and r.destination == "48:27:e2:3b:33:2d" and r.source == "34:85:18:b9:1a:64")\
+  |> map(fn: (r) => ({_value: int(v: r.rssi), _time: r._time}))\
+  |> aggregateWindow(every: 60s, fn: mean, createEmpty: false)\
+  |> yield()'
+
+result = query_api.query(org=org, query=query)
+print(result)
+
+results = []
+for table in result:
+    for record in table.records:
+    	rv = record.values['_value']
+    	print(rv)
+
+
+
+# Query script
+
+query_api = client.query_api()
+query = 'from(bucket: "csi")\
+  |> range(start: -10m)\
+  |> filter(fn: (r) => r["_measurement"] == "csi" and r["_field"] == "amplitude" and r["destination"] == "34:85:18:b9:1a:64" and r._value != 0 and r["subcarrier"] == "-41")\
+  |> map(fn: (r) => ({_value: r._value, _time: r._time, subcarrier: r.subcarrier}))\
+  |> aggregateWindow(every: 10s, fn: mean, createEmpty: false)\
+  |> yield(name: "dl_amp_sta1")'
+
+result = query_api.query(org=org, query=query)
+print(result)
+
+results = []
+for table in result:
+    for record in table.records:
+    	ts = record.values['_time']
+    	sc = record.values['subcarrier']
+    	rv = record.values['_value']
+    	print(f'{ts}: sc={sc} => {rv}')
+
+
+# get all station mac addr
+
+query_api = client.query_api()
+query = 'from(bucket: "csi")\
+  |> range(start: -100m)\
+  |> filter(fn: (r) => r["_measurement"] == "csi" and r.source != "48:27:e2:3b:33:2d")\
+  |> map(fn: (r) => ({_value: r.source}))\
+  |> distinct()\
+  |> yield(name: "mac_addresses")'
+
+result = query_api.query(org=org, query=query)
+print(result)
+
+results = []
+for table in result:
+    for record in table.records:
+    	rv = record.values['_value']
+    	print(f'{rv}')
+
+AP: 48:27:e2:3b:33:2d
+
+STAs:
+48:27:e2:3b:32:3c #
+34:85:18:b9:1a:94
+34:85:18:b9:1b:8c #
+34:85:18:b9:1b:dc #
+48:27:e2:3b:32:b4 #
+48:27:e2:3b:31:64 #
+34:85:18:b9:1a:64 #
+48:27:e2:3b:33:74 #
+
+34:85:18:b9:1c:10 #
+
+
+from(bucket: "csi")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "csi" and r["_field"] == "amplitude_rssi_scaled" and r.source == "48:27:e2:3b:33:2d" and r.destination == "34:85:18:b9:1c:10" and r["subcarrier"] == "-41")
+  |> map(fn: (r) => ({_value: r._value, _time: r._time}))
+  |> aggregateWindow(every: 1s, fn: mean, createEmpty: false)
+  |> yield(name: "downlink8")
+
