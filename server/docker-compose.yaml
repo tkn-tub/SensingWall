@@ -15,6 +15,7 @@ services:
       - 3000:3000
     volumes:
       - grafana:/var/lib/grafana
+      - ./grafana.ini:/etc/grafana/grafana.ini
   prometheus:
     image: prom/prometheus
     restart: always
