@@ -28,13 +28,123 @@ make sta_flash PORT=/dev/ttyACM2
 ```
 docker compose run
 ```
-* connect server node via WiFi to AP node:
+* installation of server components (InfluxDB, Grafana, Prometheus) - see `server/docker-compose.yaml`
+
+* connect server node via WiFi to AP node. Therefore, prepare WPA-Supplicant
+
+Setup wpa_supplicant config `/etc/wpa_supplicant/wpa_supplicant.conf`
 ```
-cd server
-server_wifi_reconnect.sh &
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=DE
+
+network={
+	ssid="sensing-wall"
+	key_mgmt=NONE
+}
 ```
 
-* installation of server components (InfluxDB, Grafana, Prometheus) - see server/docker-compose.yaml
+Setup interface `/etc/network/interfaces`
+```
+# interfaces(5) file used by ifup(8) and ifdown(8)
+
+auto wlp101s0
+iface wlp101s0 inet static
+    address 192.168.4.11
+    netmask 255.255.255.0
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+```
+
+* offload InfluxDB database to tmpfs to improve performance
+
+Create tmpfs
+```
+mount -t tmpfs none /mnt
+```
+
+Create tmpfs on startup `/etc/fstab`
+```
+tmpfs    /mnt    tmpfs    defaults,size=40%      0       0
+```
+
+Link tmpfs
+```
+ln -s /mnt/server_influxDb/ influxDb
+```
+
+Init tmpfs via systemd. Create the service file `/etc/systemd/system/init-fsram-influxdb.service`
+```
+[Unit]
+Description=Script to init ramfs in /mnt after fstab
+After=local-fs.target
+
+[Service]
+Type=simple        
+ExecStart=/bin/bash -c "cp -rp /home/csibox/sensing_wall/server/influxdb_data_hdd /mnt/server_influxDb"
+
+
+[Install]
+WantedBy=multi-user.target
+```
+Test the job
+
+```
+sudo service init-fsram-influxdb start
+```
+
+Enable job on startup
+
+```
+sudo systemctl enable init-fsram-influxdb.service
+```
+
+* start collector
+```
+cd server
+python3 server_ng_parallel.py
+```
+
+make collector restarting on reboot. Make therefore sure that all required packets are installed for user `root`.
+You can check it via using
+```
+su
+python3 server_ng_parallel.py
+```
+
+Now, create the service file `/etc/systemd/system/sensingwallserver.service`
+```
+[Unit]
+Description=Sensingwall Server
+After=network.target
+
+[Service]
+#StartLimitIntervalSec=0[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/usr/bin/python3 /home/csibox/sensing_wall/server/server_ng_parallel.py
+
+[Install]
+WantedBy=multi-user.target
+```
+ Test the job
+
+```
+sudo service sensingwallserver start
+```
+
+Enable job on startup
+
+```
+sudo systemctl enable sensingwallserver.service
+```
+
+* add hosts
+```
+127.0.0.1	influxdb
+127.0.0.1	prometheus
+```
+
 
 ## Acknowledgement
 
