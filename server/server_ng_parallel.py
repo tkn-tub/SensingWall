@@ -32,7 +32,9 @@ print_stats_wait_timer= WaitTimer(1.0)
 
 bucket = "csi"
 org = "my-init-org"
-token = "XNu7o7FCokJgHk5dnsbD9OpwKfVydwzeqnM18lTLsZU5HeScbmaOVY28g_4E8H0PzfFqMjUR27J-DWHu3Qrtnw=="
+#token = "XNu7o7FCokJgHk5dnsbD9OpwKfVydwzeqnM18lTLsZU5HeScbmaOVY28g_4E8H0PzfFqMjUR27J-DWHu3Qrtnw=="
+# token = "NPawVKiFSNoMnBMHpGiECk0wN13-cXTodw4WbcaxdqsWmSRg97uwuFw85Td5btU7Ar_MKw0PHrFgzj4Ljcb7tA=="
+token = "IWSYv4r7uMLhVgRqxA64_dF0uboUNMNp2xABWGaQ20dG7jq78ynjOKvvESz6UUOYVAPtTeQAPJMmjw6Fzf-yjQ=="
 # Store the URL of your InfluxDB instance
 url = "http://localhost:8086"
 
@@ -186,15 +188,16 @@ while True:
         sock_fd = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM, proto=0)
         sock_fd.bind((host_ip, host_port))
         break
-    except:
+    except Exception as error:
+        print(error)
         print('Failed to create a socket, retrying...')
         time.sleep(5)
 
 def process_packet(queue, p_count):
 
     # Wait Timers.
-    print_stats_wait_timer_for_process = WaitTimer(1.0)
-    db_write_wait_timer = WaitTimer(2.0)
+    print_stats_wait_timer_for_process = WaitTimer(0.5)
+    db_write_wait_timer = WaitTimer(0.2)
 
     records_list = []
     rates_list = []
@@ -229,14 +232,14 @@ def process_packet(queue, p_count):
             print(ex)
             # just sleep before trying again
             print('An error occurred, retrying...')
-            time.sleep(5)
+            #time.sleep(5)
 
 # create queue to pass arguments zu processes
 queue = multiprocessing.Queue()
 
 # Create new processes
 # one process is for receiving packages and put them in the queue
-for i in range(num_processes - 1):
+for i in range(int(num_processes / 2)):
     multiprocessing.Process(target=process_packet, args=(queue,packet_count)).start()
 
 while True:

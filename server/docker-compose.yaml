@@ -5,7 +5,7 @@ services:
     ports:
       - 8086:8086
     volumes:
-      - influxDb:/var/lib/influxdb2
+      - ./influxdb_data:/var/lib/influxdb2
   grafana:
     image: grafana/grafana
     restart: always
@@ -14,7 +14,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - grafana:/var/lib/grafana
+      - ./grafana_data:/var/lib/grafana
       - ./grafana.ini:/etc/grafana/grafana.ini
   prometheus:
     image: prom/prometheus
@@ -23,6 +23,4 @@ services:
       - 9090:9090
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-volumes:
-  influxDb: {}
-  grafana: {}
+
