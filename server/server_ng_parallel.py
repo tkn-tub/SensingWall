@@ -94,8 +94,10 @@ def create_records_from_raw_data(data_dict: dict):
     csi_len = data_dict['csi_len']
     amplitudes = []
     phases = []
+    #print(len(imaginary))
+    #print("%d"%csi_len)
     if len(imaginary) > 0 and len(real) > 0:
-        for j in range(int(csi_len / 2)):
+        for j in range(int(csi_len/2)):
             amplitudes.append(round(math.sqrt(imaginary[j] ** 2 + real[j] ** 2), 2))
             phases.append(round(math.atan2(imaginary[j], real[j]), 2))
 
@@ -116,7 +118,7 @@ def create_records_from_raw_data(data_dict: dict):
             "subcarrier": data_dict['sc_ind_start'] + i,
         },
         "fields": {'amplitude': amplitudes[i], 'phase': phases[i], 'amplitude_rssi_scaled': rssi_scale_factor * amplitudes[i], 'rssi': rssi}
-    } for i in range(int(csi_len / 2))]
+    } for i in range(int(csi_len/2))]
 
 
 def get_udp_stats() -> Optional[dict]:
@@ -208,6 +210,7 @@ def process_packet(queue, p_count):
             pid = multiprocessing.current_process().pid
 
             data = json.loads(data)
+            #print(data)
             data['real_timestamp'] = round(time.time() * 1e6)
             if 'csi_raw' in data:
                 data['csi_raw'] = list(struct.unpack('b' * data['csi_len'], base64.b64decode(data['csi_raw'], validate=True)))
