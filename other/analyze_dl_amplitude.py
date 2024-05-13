@@ -3,19 +3,18 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 bucket = "csi"
 org = "my-init-org"
-#token = "_P6D_Lv6Ezk4Cx1B_oCmFTYx7rwmql-_VoQ1qPG99bRgZWx8FaVsuaZVRv-l1NB-032_0dTVVIIa6aIABQQJVg=="
 
-token = "boEkflkgKt1CY6ueAcdRaUvIVA4fz4UhZl1-Cji2CWeXg_yVLWPzlgycTXePuTKjvDdoZ2O8_79Od9NEei5xVw=="
+token = "AzuDFnC_AgC1sK-fiq0NZtT1UwHqO1QLuFplP6QXifqPk0ps_-uKeH5c1Z1DqoePL7qcGH4E-3LNTNmpN8Uqiw=="
 
 # Store the URL of your InfluxDB instance
-url = "http://10.0.0.5:8086"
+url = "http://130.149.49.35:8086"
 
 def get_sta_mac_addr(client):
     # get all station mac addr
 
     query_api = client.query_api()
     query = 'from(bucket: "csi")\
-      |> range(start: -100m)\
+      |> range(start: -1m)\
       |> filter(fn: (r) => r["_measurement"] == "csi" and r.source != "48:27:e2:3b:33:2d")\
       |> map(fn: (r) => ({_value: r.source}))\
       |> distinct()\
