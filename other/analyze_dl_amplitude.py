@@ -3,9 +3,12 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 bucket = "csi"
 org = "my-init-org"
-token = "_P6D_Lv6Ezk4Cx1B_oCmFTYx7rwmql-_VoQ1qPG99bRgZWx8FaVsuaZVRv-l1NB-032_0dTVVIIa6aIABQQJVg=="
+#token = "_P6D_Lv6Ezk4Cx1B_oCmFTYx7rwmql-_VoQ1qPG99bRgZWx8FaVsuaZVRv-l1NB-032_0dTVVIIa6aIABQQJVg=="
+
+token = "boEkflkgKt1CY6ueAcdRaUvIVA4fz4UhZl1-Cji2CWeXg_yVLWPzlgycTXePuTKjvDdoZ2O8_79Od9NEei5xVw=="
+
 # Store the URL of your InfluxDB instance
-url = "http://localhost:8086"
+url = "http://10.0.0.5:8086"
 
 def get_sta_mac_addr(client):
     # get all station mac addr
