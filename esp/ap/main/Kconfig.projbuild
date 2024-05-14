@@ -1,0 +1,45 @@
+menu "SensingWall Configuration"
+
+    config ESP_WIFI_SSID
+        string "WiFi SSID"
+        default "sensing-wall"
+        help
+            SSID (network name) for WiFi network to be used.
+
+    config ESP_WIFI_PASSWORD
+        string "WiFi Password"
+        default ""
+        help
+            WiFi password (WPA or WPA2) for the WiFi network to use.
+
+    config ESP_WIFI_CHANNEL
+        int "WiFi Channel"
+        range 1 13
+        default 6
+        help
+            WiFi channel (network channel) for the example to use.
+
+    config ESP_MAX_STA_CONN
+        int "Maximal STA connections"
+        default 20
+        help
+            Max number of the STA connects to AP.
+
+    config DB_HOST_MAC
+        string "DB WiFi-MAC Address"
+        default "94:e2:3c:46:ff:78"
+        help
+            MAC address of the Wifi interface of the database host.
+
+    config DB_HOST_IP
+        string "DB WiFi-IP Address"
+        default "192.168.4.11"
+        help
+            IP address of the Wifi interface of database host.
+
+    config IP_MCAST_INTERVAL
+        int "Interval in ms between two IP multicast packets"
+        default 20
+        help
+            Interval in ms between two IP multicast packets.
+endmenu

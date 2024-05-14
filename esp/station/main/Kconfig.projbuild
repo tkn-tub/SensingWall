@@ -1,0 +1,26 @@
+menu "SensingWall Configuration"
+
+    config ESP_WIFI_SSID
+        string "WiFi SSID"
+        default "sensing-wall"
+        help
+            SSID (network name) for WiFi network to be used.
+
+    config ESP_WIFI_PASSWORD
+        string "WiFi Password"
+        default ""
+        help
+            WiFi password (WPA or WPA2) for the WiFi network to use.
+
+    config AP_BSSID
+        string "DB WiFi-MAC Address"
+        default "48:27:e2:3b:33:2d"
+        help
+            MAC address of the sensing wall WiFi AP.
+
+    config DB_HOST_IP
+        string "DB WiFi-IP Address"
+        default "192.168.4.11"
+        help
+            IP address of the Wifi interface of database host.
+endmenu
