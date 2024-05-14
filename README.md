@@ -19,12 +19,12 @@ The following sequence diagram demonstrates the interaction between those three 
 ## Installation
 
 The installation process contains the following steps:
-* building and flashing the ESP32 nodes (AP and N stations) - see Makefile
+* building and flashing the ESP32 nodes (AP and N stations) - see Makefile in `esp` directory.
 ```
 make ap_flash PORT=/dev/ttyACM0
 make sta_flash PORT=/dev/ttyACM2
 ```
-* start docker (InfluxDB, Grafana, Prometheus) on the server node:
+* start docker (InfluxDB, Grafana, Prometheus) on the server node in `server` directory:
 ```
 docker compose run
 ```
@@ -144,6 +144,20 @@ sudo systemctl enable sensingwallserver.service
 127.0.0.1	influxdb
 127.0.0.1	prometheus
 ```
+
+## Print your mounting
+
+We provide a blender file in the `mounting` directory. You can put the required parts to your 3D-printer and print your onw sensing wall. The model is modular so you can descide on the size of your sensingwall by yourself.
+
+## Examples
+
+### Grafana
+
+We provide an example Grafana dashboard. You can see the uplink and downlink CSI values there as well as the CSI values for each subcarrier. Please change the MAC filters in the queries according to your setup.
+
+### Python
+
+We also provide example queries and their visualisazion in python scripts in the folder `examples`.
 
 
 ## Acknowledgement
